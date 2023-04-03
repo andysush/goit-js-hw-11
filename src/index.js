@@ -1,12 +1,16 @@
 import PhotoApiService from './getPhotoApi';
 import { Notify } from 'notiflix';
-import axios from 'axios';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const formEl = document.querySelector('#search-form');
 const galleryListEl = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 let allHits = 0;
 const photoApiService = new PhotoApiService();
+let gallery = new SimpleLightbox('.photo-card a', {
+  loop: false,
+});
 
 formEl.addEventListener('submit', onSubmitForm);
 loadMoreBtn.addEventListener('click', onLoadMore);
@@ -27,7 +31,7 @@ function onSubmitForm(e) {
   photoApiService.resetPageNum();
   photoApiService.getPhotos().then(({ hits, totalHits }) => {
     allHits = hits.length;
-    if (hits.length >= totalHits) {
+    if (hits.length > totalHits) {
       Notify.info("We're sorry, but you've reached the end of search results.");
     }
     if (totalHits === 0) {
@@ -36,6 +40,7 @@ function onSubmitForm(e) {
       );
       return;
     } else createPhotoMarkup(hits);
+    gallery.refresh();
     Notify.success(`Hooray! We found ${totalHits} images.`);
     if (!totalHits <= photoApiService.per_page) {
       loadMoreBtn.classList.remove('is-hidden');
@@ -46,7 +51,7 @@ function onSubmitForm(e) {
 function onLoadMore() {
   photoApiService.getPhotos().then(({ hits, totalHits }) => {
     createPhotoMarkup(hits);
-
+    gallery.refresh();
     if (hits.length + allHits >= totalHits) {
       Notify.info("We're sorry, but you've reached the end of search results.");
       loadMoreBtn.classList.add('is-hidden');
@@ -60,8 +65,8 @@ function createPhotoMarkup(photos) {
     photos
       .map(photo => {
         return ` <div class="photo-card">
-      <img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy"  />
-
+      <a href="${photo.largeImageURL}"><img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy"  />
+</a>
       <div class="info">
         <p class="info-item">
           <b>Likes</b>
