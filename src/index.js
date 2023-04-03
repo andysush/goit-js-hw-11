@@ -38,6 +38,7 @@ function onSubmitForm(e) {
       Notify.warning(
         'Sorry, there are no images matching your search query. Please try again.'
       );
+      loadMoreBtn.classList.add('is-hidden');
       return;
     } else createPhotoMarkup(hits);
     gallery.refresh();
