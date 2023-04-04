@@ -2,6 +2,7 @@ import PhotoApiService from './getPhotoApi';
 import { Notify } from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import { btnUp } from './up-btn';
 
 const formEl = document.querySelector('#search-form');
 const galleryListEl = document.querySelector('.gallery');
@@ -15,6 +16,7 @@ let gallery = new SimpleLightbox('.photo-card a', {
 formEl.addEventListener('submit', onSubmitForm);
 loadMoreBtn.addEventListener('click', onLoadMore);
 loadMoreBtn.classList.add('is-hidden');
+btnUp.addEventListener();
 
 function onSubmitForm(e) {
   e.preventDefault();
